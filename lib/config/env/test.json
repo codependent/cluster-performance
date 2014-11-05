@@ -1,0 +1,12 @@
+{
+	"database" : {
+		"file":"./db/storage/messages-test"
+	},
+	"log" : {
+		"application" : {
+			"file":"./log/test/out.log",
+			"level":"info"
+		}
+	},
+    "port" : "5000"
+}

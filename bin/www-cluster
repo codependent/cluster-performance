@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+var nconf = require('../lib/config');
+var app = require('express')();
+var debug = require('debug')('mma-nodevents');
+var http = require("http")
+var appConfigurer = require('../app');
+var cluster = require('cluster');
+var numCPUs = require('os').cpus().length;
+
+if('v0.11.13'.localeCompare(process.version)>=0){
+    cluster.schedulingPolicy = cluster.SCHED_RR;
+}
+
+if (cluster.isMaster) {
+    // Fork workers.
+    for (var i = 0; i < numCPUs; i++) {
+        cluster.fork();
+    }
+    cluster.on('exit', function(worker, code, signal) {
+        console.log('worker ' + worker.process.pid + ' died');
+        cluster.fork();
+    });
+}else{
+    console.log("starting worker [%d]",process.pid);
+    appConfigurer(app);
+    var server = http.createServer(app);
+    server.listen(nconf.get('port'), function(){
+        debug('Express server listening on port ' + nconf.get('port'));
+    });
+
+}
+
+module.exports = app;

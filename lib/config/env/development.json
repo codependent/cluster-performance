@@ -1,0 +1,11 @@
+{
+	"database" : {
+		"file":"./db/storage/messages-dev"
+	},
+	"log" : {
+		"application" : {
+			"file":"./log/dev/out.log",
+			"level":"debug"
+		}
+	}
+}
